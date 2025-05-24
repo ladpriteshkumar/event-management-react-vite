@@ -1,0 +1,72 @@
+
+
+@keyframes fadeInContainer {
+    from { opacity: 0; transform: translateY(24px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+.create-event-container {
+    animation: fadeInContainer 0.5s ease-in-out;
+    margin: 48px 0 48px 0;
+    padding: 40px 28px 40px 28px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(99,102,241,0.12), 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    backdrop-filter: blur(6px);
+    border: 1.5px solid #e0e7ff;
+    transition: box-shadow 0.25s, background 0.25s;
+}
+
+.create-event-container input,
+.create-event-container textarea,
+.create-event-container select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #f9fafb;
+    transition: border-color 0.2s;
+}
+
+.create-event-container input:focus,
+.create-event-container textarea:focus,
+.create-event-container select:focus {
+    border-color: #6366f1;
+    outline: none;
+    background: #fff;
+}
+
+.create-event-container button {
+    margin: 10px;
+    padding: 10px 20px;
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.create-event-container button:hover,
+.create-event-container button:focus {
+    background: #4f46e5;
+}
+
+.create-event-container label {
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #374151;
+    display: block;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+}
+
+.create-event-container {
+    box-sizing: border-box;
+    padding: 32px 32px;
+}
