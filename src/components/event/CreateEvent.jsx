@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./CreateEvent.css";
 
-const CreateEvent = ({ onCreate, show = true, onToggle }) => {
+const CreateEvent = ({ onCreate, onUpdate, show = true, onToggle, editEvent }) => {
     const [form, setForm] = useState({
         name: "",
         date: "",
@@ -9,33 +9,54 @@ const CreateEvent = ({ onCreate, show = true, onToggle }) => {
         description: "",
     });
 
+    useEffect(() => {
+        if (editEvent) {
+            setForm({
+                name: editEvent.name || "",
+                date: editEvent.date || "",
+                location: editEvent.location || "",
+                description: editEvent.description || "",
+            });
+        } else {
+            setForm({
+                name: "",
+                date: "",
+                location: "",
+                description: "",
+            });
+        }
+    }, [editEvent]);
+
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (onCreate) onCreate(form);
+        if (editEvent && onUpdate) {
+            onUpdate(editEvent.id, form);
+        } else if (onCreate) {
+            onCreate(form);
+        }
         setForm({ name: "", date: "", location: "", description: "" });
-        if (onToggle) onToggle(); // Optionally hide after submit
+        if (onToggle) onToggle();
     };
 
     if (!show) {
         return (
             <button
-            type="button"
-            onClick={onToggle}
-            style={{  width: "200px" }}
+                type="button"
+                onClick={onToggle}
+                style={{ width: "200px" }}
             >
-            Create Event
+                {editEvent ? "Edit Event" : "Create Event"}
             </button>
         );
     }
 
     return (
         <div className="create-event-container">
-        
-            <h2>Create Event</h2>
+            <h2>{editEvent ? "Update Event" : "Create Event"}</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>
@@ -85,9 +106,12 @@ const CreateEvent = ({ onCreate, show = true, onToggle }) => {
                         />
                     </label>
                 </div>
-                <button type="submit">Create Event</button>
+                <button type="submit">
+                    {editEvent ? "Update Event" : "Create Event"}
+                </button>
                 <button type="button" onClick={onToggle} style={{ marginLeft: "1rem" }}>
-                    Cancel</button>
+                    Cancel
+                </button>
             </form>
         </div>
     );

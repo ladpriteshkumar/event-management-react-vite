@@ -1,34 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useRef } from 'react'
 import './App.css'
 import Header from './components/header/Header.jsx'
 import CreateEvent from './components/event/CreateEvent.jsx'
 import EventList from './components/event/EventList.jsx';
 
 function App() {
-  const [events, setEvents] = useState([]);
+  const [showCreate, setShowCreate] = useState(false);
+  const [editEvent, setEditEvent] = useState(null);
+  const eventListRef = useRef();
 
-  // Handler to add a new event
-  const handleCreateEvent = (event) => {
-    setEvents([...events, event]);
+  // Create event handler
+  const handleCreateEvent = async (eventData) => {
+    try {
+      await fetch("https://localhost:7111/Event/AddEvent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(eventData),
+      });
+      if (eventListRef.current && eventListRef.current.refreshEvents) {
+        eventListRef.current.refreshEvents();
+      }
+      setShowCreate(false);
+      setEditEvent(null);
+    } catch (error) {
+      alert("Failed to create event");
+    }
   };
 
-  // Handler for toggling (example: show/hide create event form)
-  const [showCreate, setShowCreate] = useState(false);
+  // Update event handler
+  const handleUpdateEvent = async (id, updatedData) => {
+    try {
+      await fetch(`https://localhost:7111/Event/UpdateEvent/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedData),
+      });
+      if (eventListRef.current && eventListRef.current.refreshEvents) {
+        eventListRef.current.refreshEvents();
+      }
+      setShowCreate(false);
+      setEditEvent(null);
+    } catch (error) {
+      alert("Failed to update event");
+    }
+  };
+
+  // Edit event trigger
+  const handleEditEvent = (event) => {
+    setEditEvent(event);
+    setShowCreate(true);
+  };
 
   const handleOnToggle = () => {
     setShowCreate(prev => !prev);
+    setEditEvent(null);
   };
 
   return (
     <>
       <Header />
       <div>
-        <h1>Event Management</h1>   
+        <h1>Event Management</h1>
         <div className="container">
-          <CreateEvent show={showCreate} onToggle={handleOnToggle} onCreate={handleCreateEvent} />
-          <EventList events={events} />
+          <CreateEvent
+            show={showCreate}
+            onToggle={handleOnToggle}
+            onCreate={handleCreateEvent}
+            editEvent={editEvent}
+            onUpdate={handleUpdateEvent}
+          />
+          <EventList ref={eventListRef} onEdit={handleEditEvent} />
         </div>
       </div>
     </>
