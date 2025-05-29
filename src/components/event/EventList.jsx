@@ -1,4 +1,5 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from "react";
+import EventService from "../../services/EventServices.js";
 import "./EventList.css";
 
 const EventList = forwardRef(({ onEdit }, ref) => {
@@ -8,11 +9,10 @@ const EventList = forwardRef(({ onEdit }, ref) => {
     const fetchEvents = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://localhost:7111/Event/GetEvents");
-            if (!response.ok) throw new Error("Failed to fetch events");
-            const data = await response.json();
+            const data =  await EventService.getEvents();;
             setEvents(data);
-        } catch {
+        } catch (error) {
+            console.error("Failed to fetch events:", error);
             setEvents([]);
         } finally {
             setLoading(false);
@@ -22,10 +22,7 @@ const EventList = forwardRef(({ onEdit }, ref) => {
     const handleDelete = async (eventId) => {
         if (!window.confirm("Are you sure you want to delete this event?")) return;
         try {
-            const response = await fetch(`https://localhost:7111/Event/DeleteEvent/${eventId}`, {
-                method: "DELETE",
-            });
-            if (!response.ok) throw new Error("Failed to delete event");
+            await EventService.deleteEvent(eventId);
             fetchEvents();
         } catch (error) {
             alert(error.message);

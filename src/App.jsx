@@ -3,6 +3,7 @@ import './App.css'
 import Header from './components/header/Header.jsx'
 import CreateEvent from './components/event/CreateEvent.jsx'
 import EventList from './components/event/EventList.jsx';
+import EventService from "./services/EventServices.js";
 
 function App() {
   const [showCreate, setShowCreate] = useState(false);
@@ -12,11 +13,7 @@ function App() {
   // Create event handler
   const handleCreateEvent = async (eventData) => {
     try {
-      await fetch("https://localhost:7111/Event/AddEvent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(eventData),
-      });
+      await EventService.addEvent(eventData);
       if (eventListRef.current && eventListRef.current.refreshEvents) {
         eventListRef.current.refreshEvents();
       }
@@ -30,11 +27,7 @@ function App() {
   // Update event handler
   const handleUpdateEvent = async (id, updatedData) => {
     try {
-      await fetch(`https://localhost:7111/Event/UpdateEvent/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedData),
-      });
+      await EventService.updateEvent(id, updatedData);
       if (eventListRef.current && eventListRef.current.refreshEvents) {
         eventListRef.current.refreshEvents();
       }
