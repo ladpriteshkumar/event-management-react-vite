@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./CreateEvent.css";
 import GooglePlaceAutocomplete from "../googlePlaceApi/PlaceAutocompleteElement";
+import { usePreventEnterSubmit } from "../../customHooks/UsePreventEnterSubmit.js";
 
 const CreateEvent = ({ onCreate, onUpdate, show = true, onToggle, editEvent }) => {
     const [form, setForm] = useState({
@@ -10,6 +11,8 @@ const CreateEvent = ({ onCreate, onUpdate, show = true, onToggle, editEvent }) =
         description: "",
     });
 
+    const preventEnterSubmit = usePreventEnterSubmit();
+    
     useEffect(() => {
         if (editEvent) {
             // Ensure date is in YYYY-MM-DD format for input type="date"
@@ -69,7 +72,8 @@ const CreateEvent = ({ onCreate, onUpdate, show = true, onToggle, editEvent }) =
     return (
         <div className="create-event-container">
             <h2>{editEvent ? "Update Event" : "Create Event"}</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}
+                  onKeyDown={preventEnterSubmit}>
                 <div>
                     <label>
                         Event Name:

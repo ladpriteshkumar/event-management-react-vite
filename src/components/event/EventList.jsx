@@ -2,6 +2,18 @@ import React, { useEffect, useState, forwardRef, useImperativeHandle } from "rea
 import EventService from "../../services/EventServices.js";
 import "./EventList.css";
 
+// Helper to format date as dd MMM yyyy
+function formatDate(dateStr) {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    if (isNaN(date)) return dateStr;
+    return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
 const EventList = forwardRef(({ onEdit }, ref) => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -63,7 +75,7 @@ const EventList = forwardRef(({ onEdit }, ref) => {
                         events.map((event, idx) => (
                             <tr key={event.id || idx}>
                                 <td>{event.name}</td>
-                                <td>{event.date}</td>
+                                <td>{formatDate(event.date)}</td>
                                 <td>{event.location}</td>
                                 <td>{event.description}</td>
                                 <td>
