@@ -12,6 +12,11 @@ const CreateEvent = ({ onCreate, onUpdate, show = true, onToggle, editEvent }) =
 
     useEffect(() => {
         if (editEvent) {
+            // Ensure date is in YYYY-MM-DD format for input type="date"
+            editEvent.date = editEvent.date || "";
+            if (editEvent.date && editEvent.date.length > 10) {
+                editEvent.date = editEvent.date.slice(0, 10);
+            }
             setForm({
                 name: editEvent.name || "",
                 date: editEvent.date || "",
@@ -93,7 +98,10 @@ const CreateEvent = ({ onCreate, onUpdate, show = true, onToggle, editEvent }) =
                 <div>
                     <label>
                         Location:
-                        <GooglePlaceAutocomplete onPlaceSelected={handlePlaceSelected} />
+                        <GooglePlaceAutocomplete
+                            onPlaceSelected={handlePlaceSelected}
+                            value={form.location}
+                        />
                     </label>
                 </div>
                 <div>

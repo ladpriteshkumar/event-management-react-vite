@@ -1,8 +1,14 @@
 import React, { useEffect, useRef } from "react";
 ///we are using the classic Google Maps JavaScript API for Places Autocomplete
 //we can also make use google Pleac new
-const GooglePlaceAutocomplete = ({ onPlaceSelected }) => {
+const GooglePlaceAutocomplete = ({ onPlaceSelected, value }) => {
     const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (inputRef.current && value !== undefined) {
+            inputRef.current.value = value;
+        }
+    }, [value]);
 
     useEffect(() => {
         const apiKey = "AIzaSyBHTKNGepwzu1kClo0mN5PZpytDG66fES8";
