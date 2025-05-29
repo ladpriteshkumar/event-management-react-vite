@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./CreateEvent.css";
+import GooglePlaceAutocomplete from "../googlePlaceApi/PlaceAutocompleteElement";
 
 const CreateEvent = ({ onCreate, onUpdate, show = true, onToggle, editEvent }) => {
     const [form, setForm] = useState({
@@ -40,6 +41,12 @@ const CreateEvent = ({ onCreate, onUpdate, show = true, onToggle, editEvent }) =
         }
         setForm({ name: "", date: "", location: "", description: "" });
         if (onToggle) onToggle();
+    };
+
+    const handlePlaceSelected = (place) => {
+        if (place && place.formatted_address) {
+            setForm(f => ({ ...f, location: place.formatted_address }));
+        }
     };
 
     if (!show) {
@@ -86,13 +93,7 @@ const CreateEvent = ({ onCreate, onUpdate, show = true, onToggle, editEvent }) =
                 <div>
                     <label>
                         Location:
-                        <input
-                            type="text"
-                            name="location"
-                            value={form.location}
-                            onChange={handleChange}
-                            required
-                        />
+                        <GooglePlaceAutocomplete onPlaceSelected={handlePlaceSelected} />
                     </label>
                 </div>
                 <div>
