@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import './App.css';
 import Header from './components/header/Header.jsx';
 import CreateEvent from './components/event/CreateEvent.jsx';
@@ -73,14 +73,13 @@ function App() {
   return (
     <>
       <Header />
-      <BrowserRouter>
-      <Routes>
-        <Route path="/event-management-react-vite/" element={<EventList show={showEvents} ref={eventListRef} onEdit={handleEditEvent} />} />
-        <Route path="/event-management-react-vite/create-event" element={<CreateEvent />} />
-        <Route path="/event-management-react-vite/send-invite" element={<SendInvite />} />
-        {/* Add more routes as needed */}
-      </Routes>
-    </BrowserRouter>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<EventList show={showEvents} ref={eventListRef} onEdit={handleEditEvent} />} />
+          <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/send-invite" element={<SendInvite />} />
+        </Routes>
+      </HashRouter>
     </>
   )
 }

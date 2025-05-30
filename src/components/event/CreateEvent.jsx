@@ -36,7 +36,7 @@ const CreateEvent = () => {
         try {
             await EventService.addEvent(form);
             setForm({ name: "", date: "", location: "", description: "" });
-            navigate("/event-management-react-vite/send-invite"); // Redirect to event list or wherever you want
+            navigate("/send-invite"); // Redirect to event list or wherever you want
         } catch (error) {
             alert("Failed to create event: " + (error.message || error));
         } finally {

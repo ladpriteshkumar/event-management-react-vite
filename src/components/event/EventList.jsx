@@ -14,14 +14,14 @@ function formatDate(dateStr) {
     });
 }
 
-const EventList = forwardRef(({ onEdit, show = true }, ref) => {
+const EventList = forwardRef(({ onEdit }, ref) => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const fetchEvents = async () => {
         setLoading(true);
         try {
-            const data =  await EventService.getEvents();;
+            const data =  await EventService.getEvents();
             setEvents(data);
         } catch (error) {
             console.error("Failed to fetch events:", error);
@@ -46,12 +46,8 @@ const EventList = forwardRef(({ onEdit, show = true }, ref) => {
     }));
 
     useEffect(() => {
-        if (show) {
-            fetchEvents();
-        }
-    }, [show]);
-
-    if (!show) return null;
+        fetchEvents();
+    }, []);
 
     return (
         <>
@@ -68,9 +64,7 @@ const EventList = forwardRef(({ onEdit, show = true }, ref) => {
                     cursor: "pointer"
                 }}
                 onClick={() => {
-                    // If you have a create event page, navigate to it:
-                    window.location.href = "/event-management-react-vite/create-event";
-                    // Or, if you use a modal or callback, replace this with your logic
+                    window.location.hash = "#/create-event";
                 }}
             >
                 Create Event
