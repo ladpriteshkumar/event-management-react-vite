@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle } from "react";
+import React, { forwardRef, useImperativeHandle, useState, useEffect } from "react";
 import EventService from "../../services/EventServices.js";
 import "./EventList.css";
 
@@ -14,7 +14,7 @@ function formatDate(dateStr) {
     });
 }
 
-const EventList = forwardRef(({ onEdit }, ref) => {
+const EventList = forwardRef(({ onEdit, show = true }, ref) => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -46,13 +46,36 @@ const EventList = forwardRef(({ onEdit }, ref) => {
     }));
 
     useEffect(() => {
-        fetchEvents();
-    }, []);
+        if (show) {
+            fetchEvents();
+        }
+    }, [show]);
+
+    if (!show) return null;
 
     return (
         <>
+        <div className="container">
             <h2>Event List</h2>
-            <table className="event-table">
+            <button
+                style={{
+                    marginBottom: "16px",
+                    padding: "8px 16px",
+                    background: "#10b981",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer"
+                }}
+                onClick={() => {
+                    // If you have a create event page, navigate to it:
+                    window.location.href = "/event-management-react-vite/create-event";
+                    // Or, if you use a modal or callback, replace this with your logic
+                }}
+            >
+                Create Event
+            </button>
+            <table className="event-table"> 
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -97,6 +120,7 @@ const EventList = forwardRef(({ onEdit }, ref) => {
                     )}
                 </tbody>
             </table>
+        </div>
         </>
     );
 });

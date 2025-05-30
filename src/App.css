@@ -18,7 +18,7 @@ button:focus {
 
 
 .container {
-    animation: fadeInContainer 0.5s ease-in-out;
+    /* animation: fadeInContainer 0.5s ease-in-out; */
     margin: 48px 0 48px 0;
     padding: 40px 28px 40px 28px;
     background: rgba(255,255,255,0.85);
