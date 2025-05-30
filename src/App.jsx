@@ -4,6 +4,7 @@ import Header from './components/header/Header.jsx'
 import CreateEvent from './components/event/CreateEvent.jsx'
 import EventList from './components/event/EventList.jsx';
 import EventService from "./services/EventServices.js";
+import GetContacts from './components/googlePeopleApi/GetContacts.jsx';
 
 function App() {
   const [showCreate, setShowCreate] = useState(false);
@@ -62,8 +63,11 @@ function App() {
             editEvent={editEvent}
             onUpdate={handleUpdateEvent}
           />
+          
           <EventList ref={eventListRef} onEdit={handleEditEvent} />
         </div>
+
+        <GetContacts/>
       </div>
     </>
   )
