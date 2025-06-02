@@ -4,6 +4,8 @@ import GooglePlaceAutocomplete from "../googlePlaceApi/PlaceAutocompleteElement"
 import { usePreventEnterSubmit } from "../../customHooks/UsePreventEnterSubmit.js";
 import EventService from "../../services/EventServices.js"; // Make sure this path is correct
 import { useNavigate } from "react-router-dom"; // For navigation after creation
+import { useParams } from "react-router-dom";
+
 
 const CreateEvent = () => {
     const [form, setForm] = useState({
@@ -12,19 +14,41 @@ const CreateEvent = () => {
         location: "",
         description: "",
     });
-
+     
+    const { id } = useParams(); 
     const [loading, setLoading] = useState(false);
     const preventEnterSubmit = usePreventEnterSubmit();
     const navigate = useNavigate();
 
     useEffect(() => {
-        setForm({
-            name: "",
-            date: "",
-            location: "",
-            description: "",
-        });
+        GetEvent();
     }, []);
+
+
+    const GetEvent =() => {
+        if (id) {
+            EventService.getEvent(id)
+                .then((event) => {
+                    setForm({
+                        name: event.name || "",
+                        date: event.date || "",
+                        location: event.location || "",
+                        description: event.description || "",
+                    });
+                })
+                .catch((error) => {
+                    alert("Failed to fetch event: " + (error.message || error));
+                });
+        }
+        else {
+            setForm({
+                name: "",
+                date: "",
+                location: "",
+                description: "",
+            });
+        }
+    }
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });

@@ -10,12 +10,53 @@ function GetContacts() {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
 
+    // Request all available fields for each contact
+    const customPersonFields =  [
+                    "names",
+                    "emailAddresses",
+                    "phoneNumbers",
+                    "photos",
+                    "addresses",
+                    "birthdays",
+                    "biographies",
+                    "genders",
+                    "organizations",
+                    "occupations",
+                    "events",
+                    "urls",
+                    "userDefined",
+                    "imClients",
+                    "relations",
+                    "sipAddresses",
+                    "residences",
+                    "coverPhotos",
+                    "ageRanges",
+                    "clientData",
+                    "metadata"
+                ].join(",")
+
     const login = useGoogleLogin({
         scope: SCOPES,
         onSuccess: tokenResponse => setToken(tokenResponse.access_token),
         onError: error => alert("Login Failed: " + error.error),
         flow: "implicit",
     });
+
+
+
+    const formatPhoneNumber = (phone)=> {
+        const regex = /^\+?([1-9]\d{1,2})\s?(\d{10})$/;
+        const match = phone.replace(/\D/g, "").match(/^(\d{1,3})(\d{10})$/); 
+
+        if (!match) return "Invalid phone number " + `(${phone})`;
+
+        return   `+${match[1]}  ${match[2].slice(0,3)}-${match[2].slice(3,6)}-${match[2].slice(6)}`;
+    } 
+
+        
+
+
+
 
     // Fetch all contacts (no pageSize param, uses API default)
     const fetchAllContacts = async () => {
@@ -26,7 +67,7 @@ function GetContacts() {
         try {
             do {
                 const params = new URLSearchParams({
-                    personFields: "names,emailAddresses,phoneNumbers,photos"
+                    personFields: customPersonFields
                 });
                 if (nextPageToken) params.append("pageToken", nextPageToken);
                 const res = await fetch(
@@ -109,7 +150,7 @@ function GetContacts() {
                             </td>
                             <td style={{ border: "1px solid #ccc", padding: "8px" }}>
                                 {person.phoneNumbers && person.phoneNumbers.length > 0
-                                    ? person.phoneNumbers[0].value
+                                    ?  formatPhoneNumber(person.phoneNumbers[0].value)
                                     : ""}
                             </td>
                         </tr>

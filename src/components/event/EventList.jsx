@@ -41,6 +41,10 @@ const EventList = forwardRef(({ onEdit }, ref) => {
         }
     };
 
+    const handleEditEvent = (event) => {
+        window.location.hash = "#/create-event/" + event.id;
+    }
+
     useImperativeHandle(ref, () => ({
         refreshEvents: fetchEvents
     }));
@@ -98,7 +102,7 @@ const EventList = forwardRef(({ onEdit }, ref) => {
                                 <td>
                                     <button
                                         style={{ background: "#3b82f6", color: "#fff", border: "none", borderRadius: "4px", padding: "4px 10px", cursor: "pointer", marginRight: "4px" }}
-                                        onClick={() => onEdit(event)}
+                                        onClick={() => handleEditEvent(event)}
                                     >
                                         Edit
                                     </button>

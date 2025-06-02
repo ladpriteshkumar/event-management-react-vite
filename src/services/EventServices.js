@@ -1,7 +1,14 @@
 const API_BASE = "https://event-management-api-arhha6fda2aqesdj.centralus-01.azurewebsites.net/Event";
+//const API_BASE = "https://localhost:7111/Event";
 
 export async function getEvents() {
     const response = await fetch(`${API_BASE}/GetEvents`);
+    if (!response.ok) throw new Error("Failed to fetch events");
+    return response.json();
+}
+
+export async function getEvent(id) {
+    const response = await fetch(`${API_BASE}/GetEvent/${id}`);
     if (!response.ok) throw new Error("Failed to fetch events");
     return response.json();
 }
@@ -35,6 +42,7 @@ export async function deleteEvent(id) {
 }
 
 const eventService = {
+    getEvent,
     getEvents,
     addEvent,
     updateEvent,

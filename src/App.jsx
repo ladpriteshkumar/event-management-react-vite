@@ -77,6 +77,7 @@ function App() {
         <Routes>
           <Route path="/" element={<EventList show={showEvents} ref={eventListRef} onEdit={handleEditEvent} />} />
           <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/create-event/:id" element={<CreateEvent />} />
           <Route path="/send-invite" element={<SendInvite />} />
         </Routes>
       </HashRouter>
