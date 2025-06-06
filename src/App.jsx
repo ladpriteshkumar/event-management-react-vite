@@ -7,6 +7,7 @@ import EventList from './components/event/EventList.jsx';
 import EventService from "./services/EventServices.js";
 import GetContacts from './components/googlePeopleApi/GetContacts.jsx';
 import SendInvite from './components/invite/SendInvite.jsx';
+import whatsAppService from './services/whatsAppService.js';
 
 function App() {
   const [showCreate, setShowCreate] = useState(false);
@@ -72,6 +73,7 @@ function App() {
 
   return (
     <>
+    <button style={{ marginTop: "110px" }} onClick={() => whatsAppService.SendMessageToWhatsApp("12018877834", "Hello Priteshkumar i am inviting you to the event")}>Send WhatsApp Invite</button>
       <Header />
       <HashRouter>
         <Routes>

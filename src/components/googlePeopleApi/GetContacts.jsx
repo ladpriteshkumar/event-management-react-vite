@@ -1,14 +1,16 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 
 const SCOPES = "https://www.googleapis.com/auth/contacts.readonly";
 const PAGE_SIZE = 10; // Number of contacts per page
 
-function GetContacts() {
+const GetContacts = ({ onContactSelected }) => {
     const [contacts, setContacts] = useState([]);
     const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
+    const [selectedContacts, setSelectedContacts] = useState([]);
 
     // Request all available fields for each contact
     const customPersonFields =  [
@@ -42,7 +44,9 @@ function GetContacts() {
         flow: "implicit",
     });
 
-
+    useEffect(() => {
+        onContactSelected(selectedContacts);
+    }, [selectedContacts]);
 
     const formatPhoneNumber = (phone)=> {
         const regex = /^\+?([1-9]\d{1,2})\s?(\d{10})$/;
@@ -83,6 +87,11 @@ function GetContacts() {
                 allContacts = allContacts.concat(data.connections || []);
                 nextPageToken = data.nextPageToken;
             } while (nextPageToken);
+
+            for (const person of allContacts) {
+                person.IsChecked = false; // Reset selection state
+            }
+
             setContacts(allContacts);
             setPage(1); // Reset to first page after loading
         } catch (err) {
@@ -94,6 +103,28 @@ function GetContacts() {
     // Paging logic after all contacts are fetched
     const totalPages = Math.ceil(contacts.length / PAGE_SIZE);
     const pagedContacts = contacts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+    
+    //get selected contacts out to GetContacts component
+    const selectContactToSendMessage = (checked, person) => {
+        if (checked) {
+            person.IsChecked = true;
+            // Add contact to selected list
+            setSelectedContacts(prevSelected => [
+                ...prevSelected,
+                {
+                    phone: person.phoneNumbers && person.phoneNumbers.length > 0 ? formatPhoneNumber(person.phoneNumbers[0].value) : ""
+                }
+            ]);
+        } else {
+            person.IsChecked = false;
+            // Remove contact from selected list
+            setSelectedContacts(prevSelected => {
+                return prevSelected.filter(contact => contact.phone !== (person.phoneNumbers && person.phoneNumbers.length > 0 ? formatPhoneNumber(person.phoneNumbers[0].value) : ""));
+            });
+        }
+    }
+
+
 
     return (
         <div>
@@ -132,6 +163,7 @@ function GetContacts() {
             <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "1rem" }}>
                 <thead>
                     <tr>
+                        <th style={{ border: "1px solid #ccc", padding: "8px" }}>select</th>
                         <th style={{ border: "1px solid #ccc", padding: "8px" }}>Name</th>
                         <th style={{ border: "1px solid #ccc", padding: "8px" }}>Email</th>
                         <th style={{ border: "1px solid #ccc", padding: "8px" }}>Phone</th>
@@ -140,6 +172,10 @@ function GetContacts() {
                 <tbody>
                     {pagedContacts.map((person, idx) => (
                         <tr key={idx}>
+                            <td style={{ border: "1px solid #ccc", padding: "8px" }}>
+                                {/* checkbox is not reseting status on page change */}
+                                <input type="checkbox" checked= {selectedContacts.some(contact => contact.phone === (person.phoneNumbers && person.phoneNumbers.length > 0 ? formatPhoneNumber(person.phoneNumbers[0].value) : ""))} onChange={(e) => selectContactToSendMessage(e.target.checked,person)} />
+                            </td>
                             <td style={{ border: "1px solid #ccc", padding: "8px" }}>
                                 {person.names && person.names.length > 0 ? person.names[0].displayName : ""}
                             </td>
