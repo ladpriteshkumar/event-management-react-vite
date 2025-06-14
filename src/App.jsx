@@ -6,8 +6,9 @@ import CreateEvent from './components/event/CreateEvent.jsx';
 import EventList from './components/event/EventList.jsx';
 import EventService from "./services/EventServices.js";
 import GetContacts from './components/googlePeopleApi/GetContacts.jsx';
-import SendInvite from './components/invite/SendInvite.jsx';
+import SendInvite from './components/invite/SelectContact.jsx';
 import whatsAppService from './services/whatsAppService.js';
+import SelectContact from './components/invite/SelectContact.jsx';
 
 function App() {
   const [showCreate, setShowCreate] = useState(false);
@@ -72,15 +73,14 @@ function App() {
   };
 
   return (
-    <>
-    <button style={{ marginTop: "110px" }} onClick={() => whatsAppService.SendMessageToWhatsApp("12018877834", "Hello Priteshkumar i am inviting you to the event")}>Send WhatsApp Invite</button>
+    <>   
       <Header />
       <HashRouter>
         <Routes>
           <Route path="/" element={<EventList show={showEvents} ref={eventListRef} onEdit={handleEditEvent} />} />
           <Route path="/create-event" element={<CreateEvent />} />
           <Route path="/create-event/:id" element={<CreateEvent />} />
-          <Route path="/send-invite" element={<SendInvite />} />
+          <Route path="/select-contact" element={<SelectContact />} />
         </Routes>
       </HashRouter>
     </>
