@@ -5,9 +5,7 @@ import Header from './components/header/Header.jsx';
 import CreateEvent from './components/event/CreateEvent.jsx';
 import EventList from './components/event/EventList.jsx';
 import EventService from "./services/EventServices.js";
-import GetContacts from './components/googlePeopleApi/GetContacts.jsx';
-import SendInvite from './components/invite/SelectContact.jsx';
-import whatsAppService from './services/whatsAppService.js';
+import SendInvite from './components/invite/SendInvite.jsx';
 import SelectContact from './components/invite/SelectContact.jsx';
 
 function App() {
@@ -81,6 +79,10 @@ function App() {
           <Route path="/create-event" element={<CreateEvent />} />
           <Route path="/create-event/:id" element={<CreateEvent />} />
           <Route path="/select-contact" element={<SelectContact />} />
+          
+          {/* Send invite routes */}
+          <Route path="/send-invite" element={<SendInvite />} />
+          <Route path="/events/:eventId/send-invite" element={<SendInvite />} />
         </Routes>
       </HashRouter>
     </>
